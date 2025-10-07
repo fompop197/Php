@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             box-sizing: border-box;
@@ -208,10 +209,6 @@
                     <label class="block text-gray-300 mb-2">ประเภทงาน</label>
                     <select id="jobType" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
                         <option value="">เลือกประเภทงาน</option>
-                        <option value="ครูประถม">ครูประถม</option>
-                        <option value="ครูมัธยม">ครูมัธยม</option>
-                        <option value="ครูอนุบาล">ครูอนุบาล</option>
-                        <option value="ครูพิเศษ">ครูพิเศษ</option>
                     </select>
                 </div>
                 
@@ -746,10 +743,6 @@
                     <label class="block text-gray-300 mb-2">ประเภทงาน</label>
                     <select id="newUserJobType" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
                         <option value="">เลือกประเภทงาน</option>
-                        <option value="ครูประถม">ครูประถม</option>
-                        <option value="ครูมัธยม">ครูมัธยม</option>
-                        <option value="ครูอนุบาล">ครูอนุบาล</option>
-                        <option value="ครูพิเศษ">ครูพิเศษ</option>
                     </select>
                 </div>
                 
@@ -879,18 +872,12 @@
     <script>
         // Global variables
         let currentUser = null;
-        let users = [
-            { id: 1, username: 'admin', password: 'admin123', firstName: 'ผู้ดูแล', lastName: 'ระบบ', jobType: 'แอดมิน', role: 'admin', status: 'approved' }
-        ];
+        let systemActive = true; // System status
+        let users = [];
         let portfolios = [];
         let jobs = [];
         let images = [];
-        let categories = [
-            { id: 1, name: 'ครูประถม', createdAt: '2024-01-01' },
-            { id: 2, name: 'ครูมัธยม', createdAt: '2024-01-01' },
-            { id: 3, name: 'ครูอนุบาล', createdAt: '2024-01-01' },
-            { id: 4, name: 'ครูพิเศษ', createdAt: '2024-01-01' }
-        ];
+        let categories = [];
         let sidebarCollapsed = false;
 
         // Permission system
@@ -943,8 +930,26 @@
             const user = users.find(u => u.username === username && u.password === password);
             
             if (user) {
+                // Check system status for non-admin users
+                if (!systemActive && user.role !== 'admin') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'ระบบปิดใช้งานชั่วคราว',
+                        text: 'ขออภัย ระบบปิดใช้งานชั่วคราว กรุณาติดต่อผู้ดูแลระบบ',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                    return;
+                }
+                
                 if (user.status !== 'approved') {
-                    alert('บัญชีของคุณยังไม่ได้รับการอนุมัติ กรุณารอการอนุมัติจากแอดมิน');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'บัญชียังไม่ได้รับการอนุมัติ',
+                        text: 'บัญชีของคุณยังไม่ได้รับการอนุมัติ กรุณารอการอนุมัติจากแอดมิน',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#8b5cf6'
+                    });
                     return;
                 }
                 
@@ -952,7 +957,13 @@
                 hideLogin();
                 showDashboard();
             } else {
-                alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เข้าสู่ระบบไม่สำเร็จ',
+                    text: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#8b5cf6'
+                });
             }
         }
 
@@ -966,7 +977,13 @@
 
             // Check if username already exists
             if (users.find(u => u.username === username)) {
-                alert('ชื่อผู้ใช้นี้มีอยู่แล้ว');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ชื่อผู้ใช้ซ้ำ',
+                    text: 'ชื่อผู้ใช้นี้มีอยู่แล้ว กรุณาเลือกชื่อผู้ใช้อื่น',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#8b5cf6'
+                });
                 return;
             }
 
@@ -983,7 +1000,13 @@
 
             users.push(newUser);
             hideRegister();
-            alert('สมัครสมาชิกสำเร็จ! กรุณารอการอนุมัติจากแอดมิน');
+            Swal.fire({
+                icon: 'success',
+                title: 'สมัครสมาชิกสำเร็จ!',
+                text: 'กรุณารอการอนุมัติจากแอดมิน',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#8b5cf6'
+            });
             updateUserTable();
             updateDashboardStats();
         }
@@ -1121,7 +1144,13 @@
             hideAddPortfolioModal();
             updatePortfolioTable();
             updateDashboardStats();
-            alert('เพิ่มผลงานสำเร็จ!');
+            Swal.fire({
+                icon: 'success',
+                title: 'เพิ่มผลงานสำเร็จ!',
+                text: 'ผลงานใหม่ได้รับการเพิ่มเข้าระบบแล้ว',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#8b5cf6'
+            });
         }
 
         function updatePortfolioTable() {
@@ -1194,7 +1223,13 @@
             hideAddJobModal();
             updateJobTable();
             updateDashboardStats();
-            alert('เพิ่มรายจ้างงานสำเร็จ!');
+            Swal.fire({
+                icon: 'success',
+                title: 'เพิ่มรายจ้างงานสำเร็จ!',
+                text: 'รายจ้างงานใหม่ได้รับการเพิ่มเข้าระบบแล้ว',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#8b5cf6'
+            });
         }
 
         function updateJobTable() {
@@ -1285,7 +1320,13 @@
                 user.status = 'approved';
                 updateUserTable();
                 updateDashboardStats();
-                alert(`อนุมัติผู้ใช้ ${user.firstName} ${user.lastName} สำเร็จ!`);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'อนุมัติผู้ใช้สำเร็จ!',
+                    text: `อนุมัติผู้ใช้ ${user.firstName} ${user.lastName} เรียบร้อยแล้ว`,
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#8b5cf6'
+                });
             }
         }
 
@@ -1314,7 +1355,15 @@
         function toggleSystem(element) {
             element.classList.toggle('active');
             const isActive = element.classList.contains('active');
-            alert(isActive ? 'เปิดระบบเว็บไซต์แล้ว' : 'ปิดระบบเว็บไซต์แล้ว');
+            systemActive = isActive;
+            
+            Swal.fire({
+                icon: isActive ? 'success' : 'warning',
+                title: isActive ? 'เปิดระบบเว็บไซต์แล้ว' : 'ปิดระบบเว็บไซต์แล้ว',
+                text: isActive ? 'ผู้ใช้ทั่วไปสามารถเข้าใช้งานได้แล้ว' : 'เฉพาะแอดมินเท่านั้นที่สามารถเข้าใช้งานได้',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#8b5cf6'
+            });
         }
 
         // Modal functions
@@ -1340,17 +1389,179 @@
             document.getElementById('totalJobs').textContent = jobs.length;
         }
 
-        // Placeholder functions for edit operations
+        // Edit functions
         function editPortfolio(id) {
-            alert('ฟังก์ชันแก้ไขผลงาน (Portfolio ID: ' + id + ')');
+            const portfolio = portfolios.find(p => p.id === id);
+            if (!portfolio) return;
+            
+            Swal.fire({
+                title: 'แก้ไขผลงาน',
+                html: `
+                    <div class="text-left">
+                        <label class="block text-gray-700 mb-2">ชื่อผลงาน</label>
+                        <input id="editPortfolioName" class="w-full px-3 py-2 border rounded-lg mb-4" value="${portfolio.name}">
+                        
+                        <label class="block text-gray-700 mb-2">รายละเอียด</label>
+                        <textarea id="editPortfolioDescription" class="w-full px-3 py-2 border rounded-lg mb-4" rows="3">${portfolio.description}</textarea>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#8b5cf6',
+                cancelButtonColor: '#6b7280',
+                preConfirm: () => {
+                    const name = document.getElementById('editPortfolioName').value;
+                    const description = document.getElementById('editPortfolioDescription').value;
+                    
+                    if (!name || !description) {
+                        Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบถ้วน');
+                        return false;
+                    }
+                    
+                    return { name, description };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    portfolio.name = result.value.name;
+                    portfolio.description = result.value.description;
+                    updatePortfolioTable();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'แก้ไขสำเร็จ!',
+                        text: 'ข้อมูลผลงานได้รับการอัพเดตแล้ว',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }
+            });
         }
 
         function editJob(id) {
-            alert('ฟังก์ชันแก้ไขรายจ้างงาน (Job ID: ' + id + ')');
+            const job = jobs.find(j => j.id === id);
+            if (!job) return;
+            
+            Swal.fire({
+                title: 'แก้ไขรายจ้างงาน',
+                html: `
+                    <div class="text-left">
+                        <label class="block text-gray-700 mb-2">ชื่อจริง</label>
+                        <input id="editJobFirstName" class="w-full px-3 py-2 border rounded-lg mb-4" value="${job.firstName}">
+                        
+                        <label class="block text-gray-700 mb-2">นามสกุล</label>
+                        <input id="editJobLastName" class="w-full px-3 py-2 border rounded-lg mb-4" value="${job.lastName}">
+                        
+                        <label class="block text-gray-700 mb-2">รายละเอียด</label>
+                        <textarea id="editJobDescription" class="w-full px-3 py-2 border rounded-lg mb-4" rows="3">${job.description}</textarea>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#8b5cf6',
+                cancelButtonColor: '#6b7280',
+                preConfirm: () => {
+                    const firstName = document.getElementById('editJobFirstName').value;
+                    const lastName = document.getElementById('editJobLastName').value;
+                    const description = document.getElementById('editJobDescription').value;
+                    
+                    if (!firstName || !lastName || !description) {
+                        Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบถ้วน');
+                        return false;
+                    }
+                    
+                    return { firstName, lastName, description };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    job.firstName = result.value.firstName;
+                    job.lastName = result.value.lastName;
+                    job.description = result.value.description;
+                    updateJobTable();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'แก้ไขสำเร็จ!',
+                        text: 'ข้อมูลรายจ้างงานได้รับการอัพเดตแล้ว',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }
+            });
         }
 
         function editUser(id) {
-            alert('ฟังก์ชันแก้ไขผู้ใช้ (User ID: ' + id + ')');
+            const user = users.find(u => u.id === id);
+            if (!user) return;
+            
+            Swal.fire({
+                title: 'แก้ไขข้อมูลผู้ใช้',
+                html: `
+                    <div class="text-left">
+                        <label class="block text-gray-700 mb-2">ชื่อจริง</label>
+                        <input id="editUserFirstName" class="w-full px-3 py-2 border rounded-lg mb-4" value="${user.firstName}">
+                        
+                        <label class="block text-gray-700 mb-2">นามสกุล</label>
+                        <input id="editUserLastName" class="w-full px-3 py-2 border rounded-lg mb-4" value="${user.lastName}">
+                        
+                        <label class="block text-gray-700 mb-2">ประเภทงาน</label>
+                        <select id="editUserJobType" class="w-full px-3 py-2 border rounded-lg mb-4">
+                            ${categories.map(cat => `<option value="${cat.name}" ${user.jobType === cat.name ? 'selected' : ''}>${cat.name}</option>`).join('')}
+                        </select>
+                        
+                        <label class="block text-gray-700 mb-2">สิทธิ์การใช้งาน</label>
+                        <select id="editUserRole" class="w-full px-3 py-2 border rounded-lg mb-4">
+                            <option value="user" ${user.role === 'user' ? 'selected' : ''}>ผู้ใช้ธรรมดา</option>
+                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>แอดมิน</option>
+                        </select>
+                        
+                        <label class="block text-gray-700 mb-2">สถานะการอนุมัติ</label>
+                        <select id="editUserStatus" class="w-full px-3 py-2 border rounded-lg mb-4">
+                            <option value="approved" ${user.status === 'approved' ? 'selected' : ''}>อนุมัติแล้ว</option>
+                            <option value="pending" ${user.status === 'pending' ? 'selected' : ''}>รอการอนุมัติ</option>
+                            <option value="rejected" ${user.status === 'rejected' ? 'selected' : ''}>ปฏิเสธ</option>
+                        </select>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#8b5cf6',
+                cancelButtonColor: '#6b7280',
+                preConfirm: () => {
+                    const firstName = document.getElementById('editUserFirstName').value;
+                    const lastName = document.getElementById('editUserLastName').value;
+                    const jobType = document.getElementById('editUserJobType').value;
+                    const role = document.getElementById('editUserRole').value;
+                    const status = document.getElementById('editUserStatus').value;
+                    
+                    if (!firstName || !lastName || !jobType) {
+                        Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบถ้วน');
+                        return false;
+                    }
+                    
+                    return { firstName, lastName, jobType, role, status };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    user.firstName = result.value.firstName;
+                    user.lastName = result.value.lastName;
+                    user.jobType = result.value.jobType;
+                    user.role = result.value.role;
+                    user.status = result.value.status;
+                    updateUserTable();
+                    updateDashboardStats();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'แก้ไขสำเร็จ!',
+                        text: 'ข้อมูลผู้ใช้ได้รับการอัพเดตแล้ว',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }
+            });
         }
 
         // User management functions
@@ -1401,7 +1612,13 @@
             hideAddUserModal();
             updateUserTable();
             updateDashboardStats();
-            alert('เพิ่มผู้ใช้สำเร็จ!');
+            Swal.fire({
+                icon: 'success',
+                title: 'เพิ่มผู้ใช้สำเร็จ!',
+                text: 'ผู้ใช้ใหม่ได้รับการเพิ่มเข้าระบบแล้ว',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#8b5cf6'
+            });
         }
 
         // Image gallery functions
@@ -1433,7 +1650,13 @@
                     images.push(newImage);
                     hideAddImageModal();
                     updateImageGallery();
-                    alert('เพิ่มรูปภาพสำเร็จ!');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'เพิ่มรูปภาพสำเร็จ!',
+                        text: 'รูปภาพใหม่ได้รับการเพิ่มเข้าแกลเลอรี่แล้ว',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#8b5cf6'
+                    });
                 };
                 reader.readAsDataURL(file);
             }
@@ -1487,7 +1710,51 @@
         }
 
         function editImage(id) {
-            alert('ฟังก์ชันแก้ไขรูปภาพ (Image ID: ' + id + ')');
+            const image = images.find(img => img.id === id);
+            if (!image) return;
+            
+            Swal.fire({
+                title: 'แก้ไขรูปภาพ',
+                html: `
+                    <div class="text-left">
+                        <label class="block text-gray-700 mb-2">ชื่อรูปภาพ</label>
+                        <input id="editImageName" class="w-full px-3 py-2 border rounded-lg mb-4" value="${image.name}">
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">รูปภาพปัจจุบัน</label>
+                            <img src="${image.src}" alt="${image.name}" class="w-32 h-32 object-cover rounded-lg mx-auto">
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#8b5cf6',
+                cancelButtonColor: '#6b7280',
+                preConfirm: () => {
+                    const name = document.getElementById('editImageName').value;
+                    
+                    if (!name) {
+                        Swal.showValidationMessage('กรุณากรอกชื่อรูปภาพ');
+                        return false;
+                    }
+                    
+                    return { name };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    image.name = result.value.name;
+                    updateImageGallery();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'แก้ไขสำเร็จ!',
+                        text: 'ชื่อรูปภาพได้รับการอัพเดตแล้ว',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }
+            });
         }
 
         // Category management functions
@@ -1520,7 +1787,13 @@
             hideAddCategoryModal();
             updateCategoryTable();
             updateJobTypeOptions();
-            alert('เพิ่มประเภทงานสำเร็จ!');
+            Swal.fire({
+                icon: 'success',
+                title: 'เพิ่มประเภทงานสำเร็จ!',
+                text: 'ประเภทงานใหม่ได้รับการเพิ่มเข้าระบบแล้ว',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#8b5cf6'
+            });
         }
 
         function updateCategoryTable() {
@@ -1554,7 +1827,53 @@
         }
 
         function editCategory(id) {
-            alert('ฟังก์ชันแก้ไขประเภทงาน (Category ID: ' + id + ')');
+            const category = categories.find(cat => cat.id === id);
+            if (!category) return;
+            
+            Swal.fire({
+                title: 'แก้ไขประเภทงาน',
+                html: `
+                    <div class="text-left">
+                        <label class="block text-gray-700 mb-2">ชื่อประเภทงาน</label>
+                        <input id="editCategoryName" class="w-full px-3 py-2 border rounded-lg mb-4" value="${category.name}">
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#8b5cf6',
+                cancelButtonColor: '#6b7280',
+                preConfirm: () => {
+                    const name = document.getElementById('editCategoryName').value;
+                    
+                    if (!name) {
+                        Swal.showValidationMessage('กรุณากรอกชื่อประเภทงาน');
+                        return false;
+                    }
+                    
+                    // Check if category name already exists (excluding current category)
+                    if (categories.find(c => c.name === name && c.id !== id)) {
+                        Swal.showValidationMessage('ประเภทงานนี้มีอยู่แล้ว');
+                        return false;
+                    }
+                    
+                    return { name };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    category.name = result.value.name;
+                    updateCategoryTable();
+                    updateJobTypeOptions();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'แก้ไขสำเร็จ!',
+                        text: 'ประเภทงานได้รับการอัพเดตแล้ว',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#8b5cf6'
+                    });
+                }
+            });
         }
 
         function updateJobTypeOptions() {
@@ -1669,5 +1988,5 @@
             }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ac3333f43f731f',t:'MTc1OTgyNzU0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98acf1ed8526731f',t:'MTc1OTgzNTM1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
