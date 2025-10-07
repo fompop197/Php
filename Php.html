@@ -273,10 +273,7 @@
                         <i class="fas fa-shield-alt w-5"></i>
                         <span class="ml-3 sidebar-text">สิทธิ์การใช้งาน</span>
                     </div>
-                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('settingsSection')">
-                        <i class="fas fa-cog w-5"></i>
-                        <span class="ml-3 sidebar-text">ตั้งค่าเว็บไซต์</span>
-                    </div>
+
                     <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('gallerySection')">
                         <i class="fas fa-images w-5"></i>
                         <span class="ml-3 sidebar-text">เก็บรูปภาพ</span>
@@ -322,6 +319,12 @@
                 <div class="flex items-center justify-between">
                     <h1 id="pageTitle" class="text-2xl font-bold gradient-text">Dashboard</h1>
                     <div class="flex items-center space-x-4">
+                        <button onclick="goToWebsite()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                            <i class="fas fa-globe mr-2"></i>ไปหน้าเว็บ
+                        </button>
+                        <button onclick="logout()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>ล็อคออก
+                        </button>
                         <span id="userWelcome" class="text-gray-300">ยินดีต้อนรับ, Admin</span>
                         <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
                             <i class="fas fa-user text-white"></i>
@@ -518,67 +521,7 @@
                     </div>
                 </div>
 
-                <div id="settingsSection" class="content-section hidden">
-                    <h2 class="text-2xl font-bold text-white mb-6">ตั้งค่าเว็บไซต์</h2>
-                    
-                    <!-- Website Basic Settings -->
-                    <div class="glass-card p-6 rounded-xl mb-6">
-                        <h3 class="text-xl font-bold text-white mb-4 flex items-center">
-                            <i class="fas fa-cog text-purple-500 mr-2"></i>
-                            การตั้งค่าพื้นฐาน
-                        </h3>
-                        <form onsubmit="handleWebsiteSettings(event)">
-                            <div class="mb-6">
-                                <label class="block text-gray-300 mb-2 text-lg font-medium">ชื่อเว็บไซต์</label>
-                                <input type="text" id="websiteName" value="Teacher Portfolio System" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none text-lg" required>
-                            </div>
-                            
-                            <div class="mb-6">
-                                <label class="block text-gray-300 mb-2 text-lg font-medium">โลโก้เว็บไซต์</label>
-                                <input type="file" id="websiteLogo" accept="image/*" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none">
-                                <p class="text-gray-400 text-sm mt-2">รองรับไฟล์ JPG, PNG, GIF</p>
-                                <div id="currentLogo" class="mt-3 hidden">
-                                    <p class="text-gray-300 mb-2">โลโก้ปัจจุบัน:</p>
-                                    <img id="logoPreview" src="" alt="Current Logo" class="w-20 h-20 object-cover rounded-lg border border-gray-600">
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="glow-button px-6 py-3 text-white rounded-lg font-medium">
-                                <i class="fas fa-save mr-2"></i>บันทึกการตั้งค่า
-                            </button>
-                        </form>
-                    </div>
 
-                    <!-- Website Images Management -->
-                    <div class="glass-card p-6 rounded-xl">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-bold text-white flex items-center">
-                                <i class="fas fa-images text-blue-500 mr-2"></i>
-                                จัดการรูปภาพในเว็บไซต์
-                            </h3>
-                            <button onclick="showAddWebsiteImageModal()" class="glow-button px-4 py-2 text-white rounded-lg">
-                                <i class="fas fa-plus mr-2"></i>เพิ่มรูปภาพ
-                            </button>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="websiteImagesGrid">
-                            <!-- Website images will be inserted here -->
-                        </div>
-                        
-                        <div class="mt-6 p-4 bg-gray-800 rounded-lg">
-                            <h4 class="text-white font-medium mb-3 flex items-center">
-                                <i class="fas fa-info-circle text-yellow-500 mr-2"></i>
-                                วิธีใช้งานรูปภาพในเว็บไซต์
-                            </h4>
-                            <ul class="text-gray-300 text-sm space-y-2">
-                                <li>• คลิกที่รูปภาพเพื่อดูรายละเอียดและคัดลอก URL</li>
-                                <li>• ใช้ URL ที่ได้ในการแสดงรูปภาพในหน้าเว็บไซต์</li>
-                                <li>• รูปภาพจะถูกเก็บไว้ในระบบและสามารถเรียกใช้ได้ตลอดเวลา</li>
-                                <li>• แนะนำให้ใช้รูปภาพขนาดไม่เกิน 2MB เพื่อประสิทธิภาพที่ดี</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
 
                 <div id="gallerySection" class="content-section hidden">
                     <div class="flex justify-between items-center mb-6">
@@ -875,51 +818,7 @@
         </div>
     </div>
 
-    <!-- Add Website Image Modal -->
-    <div id="addWebsiteImageModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
-        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
-            <h3 class="text-xl font-bold gradient-text mb-6">เพิ่มรูปภาพในเว็บไซต์</h3>
-            <form onsubmit="handleAddWebsiteImage(event)">
-                <div class="mb-4">
-                    <label class="block text-gray-300 mb-2">ชื่อรูปภาพ</label>
-                    <input type="text" id="websiteImageName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-gray-300 mb-2">หมวดหมู่</label>
-                    <select id="websiteImageCategory" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
-                        <option value="">เลือกหมวดหมู่</option>
-                        <option value="hero">รูปหน้าแรก</option>
-                        <option value="banner">แบนเนอร์</option>
-                        <option value="gallery">แกลเลอรี่</option>
-                        <option value="background">พื้นหลัง</option>
-                        <option value="icon">ไอคอน</option>
-                        <option value="other">อื่นๆ</option>
-                    </select>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-gray-300 mb-2">คำอธิบาย</label>
-                    <textarea id="websiteImageDescription" rows="3" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" placeholder="คำอธิบายรูปภาพ (ไม่บังคับ)"></textarea>
-                </div>
-                
-                <div class="mb-6">
-                    <label class="block text-gray-300 mb-2">อัพโหลดไฟล์รูปภาพ</label>
-                    <input type="file" id="websiteImageFile" accept="image/*" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
-                    <p class="text-gray-400 text-sm mt-2">รองรับไฟล์ JPG, PNG, GIF (แนะนำไม่เกิน 2MB)</p>
-                </div>
-                
-                <div class="flex space-x-4">
-                    <button type="submit" class="glow-button flex-1 py-3 text-white rounded-lg font-medium">
-                        บันทึก
-                    </button>
-                    <button type="button" onclick="hideAddWebsiteImageModal()" class="flex-1 py-3 text-gray-400 border border-gray-600 rounded-lg hover:border-gray-500">
-                        ยกเลิก
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     <!-- Image View Modal -->
     <div id="imageViewModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
@@ -936,67 +835,7 @@
         </div>
     </div>
 
-    <!-- Website Image Detail Modal -->
-    <div id="websiteImageDetailModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
-        <div class="glass-card rounded-2xl p-8 w-full max-w-3xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 id="websiteImageDetailTitle" class="text-xl font-bold gradient-text">รายละเอียดรูปภาพ</h3>
-                <button onclick="hideWebsiteImageDetailModal()" class="text-gray-400 hover:text-white">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Image Preview -->
-                <div class="text-center">
-                    <img id="websiteImageDetailPreview" src="" alt="" class="max-w-full max-h-80 rounded-lg mx-auto border border-gray-600">
-                </div>
-                
-                <!-- Image Information -->
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-gray-300 mb-2 font-medium">ชื่อรูปภาพ:</label>
-                        <p id="websiteImageDetailName" class="text-white bg-gray-800 px-4 py-2 rounded-lg"></p>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-gray-300 mb-2 font-medium">หมวดหมู่:</label>
-                        <p id="websiteImageDetailCategory" class="text-white bg-gray-800 px-4 py-2 rounded-lg"></p>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-gray-300 mb-2 font-medium">คำอธิบาย:</label>
-                        <p id="websiteImageDetailDescription" class="text-white bg-gray-800 px-4 py-2 rounded-lg min-h-[60px]"></p>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-gray-300 mb-2 font-medium">URL สำหรับใช้งาน:</label>
-                        <div class="flex items-center space-x-2">
-                            <input type="text" id="websiteImageDetailURL" readonly class="flex-1 px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white text-sm">
-                            <button onclick="copyImageURL()" class="glow-button px-4 py-2 text-white rounded-lg text-sm">
-                                <i class="fas fa-copy mr-1"></i>คัดลอก
-                            </button>
-                        </div>
-                        <p class="text-gray-400 text-xs mt-1">คลิกคัดลอกเพื่อนำ URL ไปใช้ในเว็บไซต์</p>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-gray-300 mb-2 font-medium">วันที่เพิ่ม:</label>
-                        <p id="websiteImageDetailDate" class="text-white bg-gray-800 px-4 py-2 rounded-lg"></p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="flex justify-center space-x-4 mt-6">
-                <button onclick="editWebsiteImageFromDetail()" class="glow-button px-6 py-3 text-white rounded-lg">
-                    <i class="fas fa-edit mr-2"></i>แก้ไข
-                </button>
-                <button onclick="deleteWebsiteImageFromDetail()" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg">
-                    <i class="fas fa-trash mr-2"></i>ลบ
-                </button>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
@@ -1025,10 +864,16 @@
         let portfolios = [];
         let jobs = [];
         let images = [];
-        let websiteImages = []; // New array for website images
-        let categories = [];
+
+        let categories = [
+            { id: 1, name: 'ครูประถม', createdAt: new Date().toLocaleDateString('th-TH') },
+            { id: 2, name: 'ครูมัธยม', createdAt: new Date().toLocaleDateString('th-TH') },
+            { id: 3, name: 'ครูอนุบาล', createdAt: new Date().toLocaleDateString('th-TH') },
+            { id: 4, name: 'ครูพิเศษ', createdAt: new Date().toLocaleDateString('th-TH') },
+            { id: 5, name: 'ผู้ดูแลระบบ', createdAt: new Date().toLocaleDateString('th-TH') }
+        ];
         let sidebarCollapsed = false;
-        let currentWebsiteImageId = null; // For tracking current image in detail modal
+
 
         // Permission system
         let permissions = {
@@ -1038,7 +883,7 @@
                 'userManagementSection': { enabled: true, name: 'จัดการผู้ใช้', icon: 'fas fa-users' },
                 'categorySection': { enabled: true, name: 'หมวดหมู่', icon: 'fas fa-tags' },
                 'permissionSection': { enabled: true, name: 'สิทธิ์การใช้งาน', icon: 'fas fa-shield-alt' },
-                'settingsSection': { enabled: true, name: 'ตั้งค่าเว็บไซต์', icon: 'fas fa-cog' },
+
                 'gallerySection': { enabled: true, name: 'เก็บรูปภาพ', icon: 'fas fa-images' },
                 'systemSection': { enabled: true, name: 'ระบบเว็บไซต์', icon: 'fas fa-power-off' },
                 'jobSection': { enabled: true, name: 'รายจ้างงาน', icon: 'fas fa-briefcase' }
@@ -1189,6 +1034,11 @@
             document.getElementById('landingPage').classList.remove('hidden');
         }
 
+        function goToWebsite() {
+            // Navigate to main website
+            window.open('/', '_blank');
+        }
+
         // Sidebar functions
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
@@ -1236,7 +1086,7 @@
                 'userManagementSection': 'จัดการผู้ใช้',
                 'categorySection': 'หมวดหมู่',
                 'permissionSection': 'สิทธิ์การใช้งาน',
-                'settingsSection': 'ตั้งค่าเว็บไซต์',
+
                 'gallerySection': 'เก็บรูปภาพ',
                 'systemSection': 'ระบบเว็บไซต์',
                 'jobSection': 'รายจ้างงาน',
@@ -1260,8 +1110,6 @@
                 updateCategoryTable();
             } else if (sectionId === 'permissionSection') {
                 updatePermissionSettings();
-            } else if (sectionId === 'settingsSection') {
-                updateWebsiteImagesGrid();
             }
         }
 
@@ -2041,344 +1889,7 @@
             });
         }
 
-        // Website settings functions
-        function handleWebsiteSettings(event) {
-            event.preventDefault();
-            const websiteName = document.getElementById('websiteName').value;
-            const logoFile = document.getElementById('websiteLogo').files[0];
-            
-            // Update website name in header
-            document.querySelector('.gradient-text').textContent = websiteName;
-            
-            if (logoFile) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    // Show logo preview
-                    document.getElementById('logoPreview').src = e.target.result;
-                    document.getElementById('currentLogo').classList.remove('hidden');
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'อัพเดตโลโก้สำเร็จ!',
-                        text: 'โลโก้ใหม่ได้รับการบันทึกแล้ว',
-                        confirmButtonText: 'ตกลง',
-                        confirmButtonColor: '#8b5cf6'
-                    });
-                };
-                reader.readAsDataURL(logoFile);
-            }
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'บันทึกการตั้งค่าสำเร็จ!',
-                text: 'การตั้งค่าเว็บไซต์ได้รับการอัพเดตแล้ว',
-                confirmButtonText: 'ตกลง',
-                confirmButtonColor: '#8b5cf6'
-            });
-        }
 
-        // Website Images Management Functions
-        function showAddWebsiteImageModal() {
-            document.getElementById('addWebsiteImageModal').classList.remove('hidden');
-        }
-
-        function hideAddWebsiteImageModal() {
-            document.getElementById('addWebsiteImageModal').classList.add('hidden');
-            // Clear form
-            document.getElementById('websiteImageName').value = '';
-            document.getElementById('websiteImageCategory').value = '';
-            document.getElementById('websiteImageDescription').value = '';
-            document.getElementById('websiteImageFile').value = '';
-        }
-
-        function handleAddWebsiteImage(event) {
-            event.preventDefault();
-            const name = document.getElementById('websiteImageName').value;
-            const category = document.getElementById('websiteImageCategory').value;
-            const description = document.getElementById('websiteImageDescription').value;
-            const file = document.getElementById('websiteImageFile').files[0];
-            
-            if (file) {
-                // Check file size (2MB limit)
-                if (file.size > 2 * 1024 * 1024) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'ไฟล์ใหญ่เกินไป',
-                        text: 'กรุณาเลือกไฟล์ที่มีขนาดไม่เกิน 2MB',
-                        confirmButtonText: 'ตกลง',
-                        confirmButtonColor: '#8b5cf6'
-                    });
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const newWebsiteImage = {
-                        id: websiteImages.length + 1,
-                        name,
-                        category,
-                        description: description || 'ไม่มีคำอธิบาย',
-                        src: e.target.result,
-                        url: `data:image/${file.type.split('/')[1]};base64,${e.target.result.split(',')[1]}`,
-                        createdAt: new Date().toLocaleDateString('th-TH'),
-                        fileSize: (file.size / 1024).toFixed(2) + ' KB'
-                    };
-                    
-                    websiteImages.push(newWebsiteImage);
-                    hideAddWebsiteImageModal();
-                    updateWebsiteImagesGrid();
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'เพิ่มรูปภาพสำเร็จ!',
-                        text: 'รูปภาพใหม่ได้รับการเพิ่มเข้าระบบแล้ว',
-                        confirmButtonText: 'ตกลง',
-                        confirmButtonColor: '#8b5cf6'
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function updateWebsiteImagesGrid() {
-            const websiteImagesGrid = document.getElementById('websiteImagesGrid');
-            if (!websiteImagesGrid) return;
-            
-            if (websiteImages.length === 0) {
-                websiteImagesGrid.innerHTML = `
-                    <div class="col-span-full text-center py-12">
-                        <i class="fas fa-images text-6xl text-gray-600 mb-4"></i>
-                        <p class="text-gray-400 text-lg">ยังไม่มีรูปภาพในระบบ</p>
-                        <p class="text-gray-500 text-sm">คลิกปุ่ม "เพิ่มรูปภาพ" เพื่อเริ่มต้น</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Group images by category
-            const groupedImages = websiteImages.reduce((groups, image) => {
-                const category = image.category;
-                if (!groups[category]) {
-                    groups[category] = [];
-                }
-                groups[category].push(image);
-                return groups;
-            }, {});
-
-            const categoryNames = {
-                'hero': 'รูปหน้าแรก',
-                'banner': 'แบนเนอร์',
-                'gallery': 'แกลเลอรี่',
-                'background': 'พื้นหลัง',
-                'icon': 'ไอคอน',
-                'other': 'อื่นๆ'
-            };
-
-            let html = '';
-            Object.keys(groupedImages).forEach(category => {
-                html += `
-                    <div class="col-span-full mb-6">
-                        <h4 class="text-lg font-bold text-white mb-4 flex items-center">
-                            <i class="fas fa-folder text-blue-500 mr-2"></i>
-                            ${categoryNames[category] || category} (${groupedImages[category].length} รูป)
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            ${groupedImages[category].map(image => `
-                                <div class="glass-card rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300">
-                                    <div class="aspect-square bg-gray-800 flex items-center justify-center cursor-pointer" onclick="showWebsiteImageDetail(${image.id})">
-                                        <img src="${image.src}" alt="${image.name}" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="p-4">
-                                        <h5 class="text-white font-medium mb-2 truncate" title="${image.name}">${image.name}</h5>
-                                        <p class="text-gray-400 text-sm mb-3 line-clamp-2">${image.description}</p>
-                                        <div class="flex space-x-2">
-                                            <button onclick="showWebsiteImageDetail(${image.id})" class="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
-                                                <i class="fas fa-eye mr-1"></i>ดู
-                                            </button>
-                                            <button onclick="editWebsiteImage(${image.id})" class="flex-1 px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm">
-                                                <i class="fas fa-edit mr-1"></i>แก้ไข
-                                            </button>
-                                            <button onclick="deleteWebsiteImage(${image.id})" class="flex-1 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm">
-                                                <i class="fas fa-trash mr-1"></i>ลบ
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            websiteImagesGrid.innerHTML = html;
-        }
-
-        function showWebsiteImageDetail(id) {
-            const image = websiteImages.find(img => img.id === id);
-            if (!image) return;
-            
-            currentWebsiteImageId = id;
-            
-            // Populate modal with image data
-            document.getElementById('websiteImageDetailTitle').textContent = `รายละเอียด: ${image.name}`;
-            document.getElementById('websiteImageDetailPreview').src = image.src;
-            document.getElementById('websiteImageDetailPreview').alt = image.name;
-            document.getElementById('websiteImageDetailName').textContent = image.name;
-            
-            const categoryNames = {
-                'hero': 'รูปหน้าแรก',
-                'banner': 'แบนเนอร์',
-                'gallery': 'แกลเลอรี่',
-                'background': 'พื้นหลัง',
-                'icon': 'ไอคอน',
-                'other': 'อื่นๆ'
-            };
-            document.getElementById('websiteImageDetailCategory').textContent = categoryNames[image.category] || image.category;
-            document.getElementById('websiteImageDetailDescription').textContent = image.description;
-            document.getElementById('websiteImageDetailURL').value = image.src;
-            document.getElementById('websiteImageDetailDate').textContent = image.createdAt;
-            
-            document.getElementById('websiteImageDetailModal').classList.remove('hidden');
-        }
-
-        function hideWebsiteImageDetailModal() {
-            document.getElementById('websiteImageDetailModal').classList.add('hidden');
-            currentWebsiteImageId = null;
-        }
-
-        function copyImageURL() {
-            const urlInput = document.getElementById('websiteImageDetailURL');
-            urlInput.select();
-            urlInput.setSelectionRange(0, 99999); // For mobile devices
-            
-            try {
-                document.execCommand('copy');
-                Swal.fire({
-                    icon: 'success',
-                    title: 'คัดลอกสำเร็จ!',
-                    text: 'URL ได้รับการคัดลอกไปยังคลิปบอร์ดแล้ว',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            } catch (err) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถคัดลอก URL ได้ กรุณาคัดลอกด้วยตนเอง',
-                    confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#8b5cf6'
-                });
-            }
-        }
-
-        function editWebsiteImageFromDetail() {
-            if (currentWebsiteImageId) {
-                hideWebsiteImageDetailModal();
-                editWebsiteImage(currentWebsiteImageId);
-            }
-        }
-
-        function deleteWebsiteImageFromDetail() {
-            if (currentWebsiteImageId) {
-                hideWebsiteImageDetailModal();
-                deleteWebsiteImage(currentWebsiteImageId);
-            }
-        }
-
-        function editWebsiteImage(id) {
-            const image = websiteImages.find(img => img.id === id);
-            if (!image) return;
-            
-            const categoryOptions = {
-                'hero': 'รูปหน้าแรก',
-                'banner': 'แบนเนอร์',
-                'gallery': 'แกลเลอรี่',
-                'background': 'พื้นหลัง',
-                'icon': 'ไอคอน',
-                'other': 'อื่นๆ'
-            };
-            
-            Swal.fire({
-                title: 'แก้ไขรูปภาพ',
-                html: `
-                    <div class="text-left space-y-4">
-                        <div>
-                            <label class="block text-gray-700 mb-2">ชื่อรูปภาพ</label>
-                            <input id="editWebsiteImageName" class="w-full px-3 py-2 border rounded-lg" value="${image.name}">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-gray-700 mb-2">หมวดหมู่</label>
-                            <select id="editWebsiteImageCategory" class="w-full px-3 py-2 border rounded-lg">
-                                ${Object.keys(categoryOptions).map(key => 
-                                    `<option value="${key}" ${image.category === key ? 'selected' : ''}>${categoryOptions[key]}</option>`
-                                ).join('')}
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-gray-700 mb-2">คำอธิบาย</label>
-                            <textarea id="editWebsiteImageDescription" class="w-full px-3 py-2 border rounded-lg" rows="3">${image.description}</textarea>
-                        </div>
-                        
-                        <div class="text-center">
-                            <img src="${image.src}" alt="${image.name}" class="w-32 h-32 object-cover rounded-lg mx-auto border">
-                        </div>
-                    </div>
-                `,
-                showCancelButton: true,
-                confirmButtonText: 'บันทึก',
-                cancelButtonText: 'ยกเลิก',
-                confirmButtonColor: '#8b5cf6',
-                cancelButtonColor: '#6b7280',
-                width: '600px',
-                preConfirm: () => {
-                    const name = document.getElementById('editWebsiteImageName').value;
-                    const category = document.getElementById('editWebsiteImageCategory').value;
-                    const description = document.getElementById('editWebsiteImageDescription').value;
-                    
-                    if (!name || !category) {
-                        Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบถ้วน');
-                        return false;
-                    }
-                    
-                    return { name, category, description };
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    image.name = result.value.name;
-                    image.category = result.value.category;
-                    image.description = result.value.description || 'ไม่มีคำอธิบาย';
-                    updateWebsiteImagesGrid();
-                    
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'แก้ไขสำเร็จ!',
-                        text: 'ข้อมูลรูปภาพได้รับการอัพเดตแล้ว',
-                        confirmButtonText: 'ตกลง',
-                        confirmButtonColor: '#8b5cf6'
-                    });
-                }
-            });
-        }
-
-        function deleteWebsiteImage(id) {
-            const image = websiteImages.find(img => img.id === id);
-            if (!image) return;
-            
-            showConfirmModal(`คุณแน่ใจหรือไม่ที่จะลบรูปภาพ "${image.name}"?`, () => {
-                websiteImages = websiteImages.filter(img => img.id !== id);
-                updateWebsiteImagesGrid();
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'ลบรูปภาพสำเร็จ!',
-                    text: 'รูปภาพได้รับการลบออกจากระบบแล้ว',
-                    confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#8b5cf6'
-                });
-            });
-        }
 
         // Permission management functions
         function updatePermissionSettings() {
@@ -2458,5 +1969,5 @@
             }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ad26c706c1731f',t:'MTc1OTgzNzUxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ad68bd1797731f',t:'MTc1OTg0MDIyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
