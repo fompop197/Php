@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Portfolio System - ระบบจัดการครูยุคใหม่</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #7209b7 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #a855f7, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glow-button {
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .glow-button:hover {
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-collapsed {
+            width: 80px;
+        }
+        
+        .sidebar-expanded {
+            width: 280px;
+        }
+        
+        .menu-item {
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .menu-item.active {
+            background: rgba(139, 92, 246, 0.3);
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .hidden { display: none; }
+        .show { display: block; }
+        
+        .modal {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .status-pending { color: #f59e0b; }
+        .status-approved { color: #10b981; }
+        .status-rejected { color: #ef4444; }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #374151;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: #8b5cf6;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+    </style>
+</head>
+<body class="font-['Prompt'] text-white gradient-bg min-h-screen">
+
+    <!-- Landing Page -->
+    <div id="landingPage" class="min-h-screen">
+        <!-- Header -->
+        <header class="relative z-50 px-6 py-4">
+            <nav class="max-w-7xl mx-auto flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-white"></i>
+                    </div>
+                    <span class="text-xl font-bold gradient-text">Teacher Portfolio System</span>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button onclick="showLogin()" class="px-6 py-2 text-gray-300 hover:text-white transition-colors duration-300 border border-gray-600 rounded-lg hover:border-purple-500">
+                        เข้าสู่ระบบ
+                    </button>
+                    <button onclick="showRegister()" class="glow-button px-6 py-2 text-white rounded-lg font-medium">
+                        สมัครสมาชิก
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="px-6 py-20 text-center">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                <span class="gradient-text">ขับเคลื่อนศักยภาพครู</span><br>
+                <span class="text-white">สู่ยุคดิจิทัล</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-10 max-w-4xl mx-auto leading-relaxed">
+                แพลตฟอร์มจัดเก็บผลงานและประเมินครูด้วยเทคโนโลยี AI<br>
+                เพื่อการพัฒนาอย่างมีประสิทธิภาพ
+            </p>
+            <button onclick="showRegister()" class="glow-button px-10 py-4 text-xl font-semibold text-white rounded-full">
+                เริ่มต้นใช้งาน
+            </button>
+        </section>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-sign-in-alt text-2xl text-white"></i>
+                </div>
+                <h2 class="text-2xl font-bold gradient-text">เข้าสู่ระบบ</h2>
+            </div>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-6">
+                    <label class="block text-gray-300 mb-2">ชื่อผู้ใช้</label>
+                    <input type="text" id="loginUsername" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-300 mb-2">รหัสผ่าน</label>
+                    <input type="password" id="loginPassword" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <button type="submit" class="glow-button w-full py-3 text-white rounded-lg font-medium mb-4">
+                    เข้าสู่ระบบ
+                </button>
+                
+                <button type="button" onclick="hideLogin()" class="w-full py-3 text-gray-400 border border-gray-600 rounded-lg hover:border-gray-500">
+                    ยกเลิก
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-plus text-2xl text-white"></i>
+                </div>
+                <h2 class="text-2xl font-bold gradient-text">สมัครสมาชิก</h2>
+            </div>
+            
+            <form onsubmit="handleRegister(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">ชื่อจริง</label>
+                    <input type="text" id="firstName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">นามสกุล</label>
+                    <input type="text" id="lastName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">ประเภทงาน</label>
+                    <select id="jobType" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                        <option value="">เลือกประเภทงาน</option>
+                        <option value="ครูประถม">ครูประถม</option>
+                        <option value="ครูมัธยม">ครูมัธยม</option>
+                        <option value="ครูอนุบาล">ครูอนุบาล</option>
+                        <option value="ครูพิเศษ">ครูพิเศษ</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">ชื่อผู้ใช้</label>
+                    <input type="text" id="username" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-300 mb-2">รหัสผ่าน</label>
+                    <input type="password" id="password" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <button type="submit" class="glow-button w-full py-3 text-white rounded-lg font-medium mb-4">
+                    สมัครสมาชิก
+                </button>
+                
+                <button type="button" onclick="hideRegister()" class="w-full py-3 text-gray-400 border border-gray-600 rounded-lg hover:border-gray-500">
+                    ยกเลิก
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="hidden min-h-screen flex">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar sidebar-expanded fixed left-0 top-0 h-full z-40 transition-all duration-300">
+            <div class="p-4 border-b border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-graduation-cap text-white text-sm"></i>
+                        </div>
+                        <span id="sidebarTitle" class="font-bold gradient-text">TPS Admin</span>
+                    </div>
+                    <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <nav class="p-4">
+                <div id="adminMenu" class="space-y-2">
+                    <div class="menu-item active px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('dashboardSection')">
+                        <i class="fas fa-tachometer-alt w-5"></i>
+                        <span class="ml-3 sidebar-text">Dashboard</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('portfolioSection')">
+                        <i class="fas fa-folder w-5"></i>
+                        <span class="ml-3 sidebar-text">คลังผลงาน</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('userManagementSection')">
+                        <i class="fas fa-users w-5"></i>
+                        <span class="ml-3 sidebar-text">จัดการผู้ใช้</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('categorySection')">
+                        <i class="fas fa-tags w-5"></i>
+                        <span class="ml-3 sidebar-text">หมวดหมู่</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('permissionSection')">
+                        <i class="fas fa-shield-alt w-5"></i>
+                        <span class="ml-3 sidebar-text">สิทธิ์การใช้งาน</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('settingsSection')">
+                        <i class="fas fa-cog w-5"></i>
+                        <span class="ml-3 sidebar-text">ตั้งค่าเว็บไซต์</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('gallerySection')">
+                        <i class="fas fa-images w-5"></i>
+                        <span class="ml-3 sidebar-text">เก็บรูปภาพ</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('systemSection')">
+                        <i class="fas fa-power-off w-5"></i>
+                        <span class="ml-3 sidebar-text">ระบบเว็บไซต์</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('jobSection')">
+                        <i class="fas fa-briefcase w-5"></i>
+                        <span class="ml-3 sidebar-text">รายจ้างงาน</span>
+                    </div>
+                </div>
+                
+                <div id="userMenu" class="hidden space-y-2">
+                    <div class="menu-item active px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('userDashboardSection')">
+                        <i class="fas fa-tachometer-alt w-5"></i>
+                        <span class="ml-3 sidebar-text">Dashboard</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('userPortfolioSection')">
+                        <i class="fas fa-folder w-5"></i>
+                        <span class="ml-3 sidebar-text">ผลงานของฉัน</span>
+                    </div>
+                    <div class="menu-item px-4 py-3 rounded-lg cursor-pointer" onclick="showSection('userJobSection')">
+                        <i class="fas fa-briefcase w-5"></i>
+                        <span class="ml-3 sidebar-text">รายจ้างงาน</span>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="absolute bottom-4 left-4 right-4">
+                <button onclick="logout()" class="w-full px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-white transition-colors">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="ml-2 sidebar-text">ออกจากระบบ</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" class="flex-1 ml-80 transition-all duration-300">
+            <!-- Header -->
+            <header class="bg-gray-800 px-6 py-4 border-b border-gray-700">
+                <div class="flex items-center justify-between">
+                    <h1 id="pageTitle" class="text-2xl font-bold gradient-text">Dashboard</h1>
+                    <div class="flex items-center space-x-4">
+                        <span id="userWelcome" class="text-gray-300">ยินดีต้อนรับ, Admin</span>
+                        <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="p-6">
+                <!-- Dashboard Section -->
+                <div id="dashboardSection" class="content-section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="glass-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400">ผู้ใช้ทั้งหมด</p>
+                                    <p class="text-3xl font-bold text-white" id="totalUsers">0</p>
+                                </div>
+                                <i class="fas fa-users text-3xl text-purple-500"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400">ผลงานทั้งหมด</p>
+                                    <p class="text-3xl font-bold text-white" id="totalPortfolios">0</p>
+                                </div>
+                                <i class="fas fa-folder text-3xl text-blue-500"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400">รอการอนุมัติ</p>
+                                    <p class="text-3xl font-bold text-yellow-500" id="pendingApprovals">0</p>
+                                </div>
+                                <i class="fas fa-clock text-3xl text-yellow-500"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400">รายจ้างงาน</p>
+                                    <p class="text-3xl font-bold text-white" id="totalJobs">0</p>
+                                </div>
+                                <i class="fas fa-briefcase text-3xl text-green-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Section -->
+                <div id="portfolioSection" class="content-section hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">คลังผลงาน</h2>
+                        <button onclick="showAddPortfolioModal()" class="glow-button px-4 py-2 text-white rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>เพิ่มผลงาน
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card rounded-xl overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-gray-300">ชื่อผลงาน</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">รายละเอียด</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">ไฟล์</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">วันที่สร้าง</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="portfolioTableBody">
+                                <!-- Portfolio items will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- User Management Section -->
+                <div id="userManagementSection" class="content-section hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">จัดการผู้ใช้</h2>
+                        <button onclick="showAddUserModal()" class="glow-button px-4 py-2 text-white rounded-lg">
+                            <i class="fas fa-user-plus mr-2"></i>เพิ่มผู้ใช้
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card rounded-xl overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-gray-300">ชื่อ-นามสกุล</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">ประเภทงาน</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">สิทธิ์</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">สถานะ</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <!-- User items will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Job Section -->
+                <div id="jobSection" class="content-section hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">รายจ้างงาน</h2>
+                        <button onclick="showAddJobModal()" class="glow-button px-4 py-2 text-white rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>เพิ่มรายจ้างงาน
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card rounded-xl overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-gray-300">ชื่อ-นามสกุล</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">รายละเอียด</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">ไฟล์แนบ</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">วันที่สร้าง</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="jobTableBody">
+                                <!-- Job items will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Other sections would be implemented similarly -->
+                <div id="categorySection" class="content-section hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">หมวดหมู่ประเภทงาน</h2>
+                        <button onclick="showAddCategoryModal()" class="glow-button px-4 py-2 text-white rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>เพิ่มประเภทงาน
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card rounded-xl overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-gray-300">ลำดับ</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">ชื่อประเภทงาน</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">วันที่สร้าง</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryTableBody">
+                                <!-- Category items will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="permissionSection" class="content-section hidden">
+                    <h2 class="text-2xl font-bold text-white mb-6">สิทธิ์การใช้งาน</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Admin Permissions -->
+                        <div class="glass-card p-6 rounded-xl">
+                            <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                                <i class="fas fa-user-shield text-purple-500 mr-2"></i>
+                                สิทธิ์แอดมิน
+                            </h3>
+                            <div class="space-y-4" id="adminPermissions">
+                                <!-- Admin permissions will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <!-- User Permissions -->
+                        <div class="glass-card p-6 rounded-xl">
+                            <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                                <i class="fas fa-user text-blue-500 mr-2"></i>
+                                สิทธิ์ผู้ใช้ธรรมดา
+                            </h3>
+                            <div class="space-y-4" id="userPermissions">
+                                <!-- User permissions will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 text-center">
+                        <button onclick="savePermissions()" class="glow-button px-8 py-3 text-white rounded-lg font-medium">
+                            <i class="fas fa-save mr-2"></i>บันทึกสิทธิ์การใช้งาน
+                        </button>
+                    </div>
+                </div>
+
+                <div id="settingsSection" class="content-section hidden">
+                    <h2 class="text-2xl font-bold text-white mb-6">ตั้งค่าเว็บไซต์</h2>
+                    <div class="glass-card p-6 rounded-xl">
+                        <form onsubmit="handleWebsiteSettings(event)">
+                            <div class="mb-6">
+                                <label class="block text-gray-300 mb-2 text-lg font-medium">ชื่อเว็บไซต์</label>
+                                <input type="text" id="websiteName" value="Teacher Portfolio System" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none text-lg" required>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-gray-300 mb-2 text-lg font-medium">โลโก้เว็บไซต์</label>
+                                <input type="file" id="websiteLogo" accept="image/*" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none">
+                                <p class="text-gray-400 text-sm mt-2">รองรับไฟล์ JPG, PNG, GIF</p>
+                            </div>
+                            
+                            <button type="submit" class="glow-button px-6 py-3 text-white rounded-lg font-medium">
+                                <i class="fas fa-save mr-2"></i>บันทึกการตั้งค่า
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="gallerySection" class="content-section hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">เก็บรูปภาพ</h2>
+                        <button onclick="showAddImageModal()" class="glow-button px-4 py-2 text-white rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>เพิ่มรูปภาพ
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="imageGrid">
+                        <!-- Images will be inserted here -->
+                    </div>
+                </div>
+
+                <div id="systemSection" class="content-section hidden">
+                    <h2 class="text-2xl font-bold text-white mb-6">ระบบเว็บไซต์</h2>
+                    <div class="glass-card p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <span class="text-white">สถานะระบบ</span>
+                            <div class="toggle-switch active" onclick="toggleSystem(this)">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Dashboard Section -->
+                <div id="userDashboardSection" class="content-section hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="glass-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400">ผลงานของฉัน</p>
+                                    <p class="text-3xl font-bold text-white">0</p>
+                                </div>
+                                <i class="fas fa-folder text-3xl text-purple-500"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400">รายจ้างงาน</p>
+                                    <p class="text-3xl font-bold text-white">0</p>
+                                </div>
+                                <i class="fas fa-briefcase text-3xl text-blue-500"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-6 rounded-xl">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-400">สถานะบัญชี</p>
+                                    <p class="text-lg font-bold text-green-500">อนุมัติแล้ว</p>
+                                </div>
+                                <i class="fas fa-check-circle text-3xl text-green-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="userPortfolioSection" class="content-section hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">ผลงานของฉัน</h2>
+                        <button onclick="showAddPortfolioModal()" class="glow-button px-4 py-2 text-white rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>เพิ่มผลงาน
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card rounded-xl overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-gray-300">ชื่อผลงาน</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">รายละเอียด</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">ไฟล์</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">วันที่สร้าง</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userPortfolioTableBody">
+                                <!-- User portfolio items will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="userJobSection" class="content-section hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">รายจ้างงาน</h2>
+                        <button onclick="showAddJobModal()" class="glow-button px-4 py-2 text-white rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>เพิ่มรายจ้างงาน
+                        </button>
+                    </div>
+                    
+                    <div class="glass-card rounded-xl overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-gray-800">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-gray-300">ชื่อ-นามสกุล</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">รายละเอียด</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">ไฟล์แนบ</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">วันที่สร้าง</th>
+                                    <th class="px-6 py-4 text-left text-gray-300">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userJobTableBody">
+                                <!-- User job items will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Portfolio Modal -->
+    <div id="addPortfolioModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+            <h3 class="text-xl font-bold gradient-text mb-6">เพิ่มผลงาน</h3>
+            <form onsubmit="handleAddPortfolio(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">ชื่อผลงาน</label>
+                    <input type="text" id="portfolioName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">รายละเอียด</label>
+                    <textarea id="portfolioDescription" rows="3" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required></textarea>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-300 mb-2">อัพโหลดไฟล์</label>
+                    <input type="file" id="portfolioFile" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" multiple>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" class="glow-button flex-1 py-3 text-white rounded-lg font-medium">
+                        บันทึก
+                    </button>
+                    <button type="button" onclick="hideAddPortfolioModal()" class="flex-1 py-3 text-gray-400 border border-gray-600 rounded-lg hover:border-gray-500">
+                        ยกเลิก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Job Modal -->
+    <div id="addJobModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+            <h3 class="text-xl font-bold gradient-text mb-6">เพิ่มรายจ้างงาน</h3>
+            <form onsubmit="handleAddJob(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">ชื่อจริง</label>
+                    <input type="text" id="jobFirstName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">นามสกุล</label>
+                    <input type="text" id="jobLastName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">รายละเอียด</label>
+                    <textarea id="jobDescription" rows="3" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required></textarea>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-300 mb-2">อัพโหลดไฟล์ (ไม่จำกัด)</label>
+                    <input type="file" id="jobFiles" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" multiple>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" class="glow-button flex-1 py-3 text-white rounded-lg font-medium">
+                        บันทึก
+                    </button>
+                    <button type="button" onclick="hideAddJobModal()" class="flex-1 py-3 text-gray-400 border border-gray-600 rounded-lg hover:border-gray-500">
+                        ยกเลิก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+            <h3 class="text-xl font-bold gradient-text mb-6">เพิ่มผู้ใช้ใหม่</h3>
+            <form onsubmit="handleAddUser(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">ชื่อจริง</label>
+                    <input type="text" id="newUserFirstName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">นามสกุล</label>
+                    <input type="text" id="newUserLastName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">ประเภทงาน</label>
+                    <select id="newUserJobType" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                        <option value="">เลือกประเภทงาน</option>
+                        <option value="ครูประถม">ครูประถม</option>
+                        <option value="ครูมัธยม">ครูมัธยม</option>
+                        <option value="ครูอนุบาล">ครูอนุบาล</option>
+                        <option value="ครูพิเศษ">ครูพิเศษ</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">สิทธิ์การใช้งาน</label>
+                    <select id="newUserRole" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                        <option value="user">ผู้ใช้ธรรมดา</option>
+                        <option value="admin">แอดมิน</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">ชื่อผู้ใช้</label>
+                    <input type="text" id="newUserUsername" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">รหัสผ่าน</label>
+                    <input type="password" id="newUserPassword" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-300 mb-2">สถานะการอนุมัติ</label>
+                    <select id="newUserStatus" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                        <option value="approved">อนุมัติ</option>
+                        <option value="pending">รอการอนุมัติ</option>
+                        <option value="rejected">ไม่อนุมัติ</option>
+                    </select>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" class="glow-button flex-1 py-3 text-white rounded-lg font-medium">
+                        บันทึก
+                    </button>
+                    <button type="button" onclick="hideAddUserModal()" class="flex-1 py-3 text-gray-400 border border-gray-600 rounded-lg hover:border-gray-500">
+                        ยกเลิก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Image Modal -->
+    <div id="addImageModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+            <h3 class="text-xl font-bold gradient-text mb-6">เพิ่มรูปภาพ</h3>
+            <form onsubmit="handleAddImage(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-300 mb-2">ชื่อรูปภาพ</label>
+                    <input type="text" id="imageName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-300 mb-2">อัพโหลดไฟล์รูปภาพ</label>
+                    <input type="file" id="imageFile" accept="image/*" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                    <p class="text-gray-400 text-sm mt-2">รองรับไฟล์ JPG, PNG, GIF</p>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" class="glow-button flex-1 py-3 text-white rounded-lg font-medium">
+                        บันทึก
+                    </button>
+                    <button type="button" onclick="hideAddImageModal()" class="flex-1 py-3 text-gray-400 border border-gray-600 rounded-lg hover:border-gray-500">
+                        ยกเลิก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div id="addCategoryModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md">
+            <h3 class="text-xl font-bold gradient-text mb-6">เพิ่มประเภทงาน</h3>
+            <form onsubmit="handleAddCategory(event)">
+                <div class="mb-6">
+                    <label class="block text-gray-300 mb-2">ชื่อประเภทงาน</label>
+                    <input type="text" id="categoryName" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-purple-500 focus:outline-none" required>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" class="glow-button flex-1 py-3 text-white rounded-lg font-medium">
+                        บันทึก
+                    </button>
+                    <button type="button" onclick="hideAddCategoryModal()" class="flex-1 py-3 text-gray-400 border border-gray-600 rounded-lg hover:border-gray-500">
+                        ยกเลิก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image View Modal -->
+    <div id="imageViewModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="imageViewTitle" class="text-xl font-bold gradient-text">ดูรูปภาพ</h3>
+                <button onclick="hideImageViewModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="text-center">
+                <img id="imageViewContent" src="" alt="" class="max-w-full max-h-96 rounded-lg mx-auto">
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="hidden fixed inset-0 modal z-50 flex items-center justify-center p-4">
+        <div class="glass-card rounded-2xl p-8 w-full max-w-md text-center">
+            <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-exclamation-triangle text-2xl text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-4">ยืนยันการดำเนินการ</h3>
+            <p id="confirmMessage" class="text-gray-300 mb-6">คุณแน่ใจหรือไม่ที่จะดำเนินการนี้?</p>
+            <div class="flex space-x-4">
+                <button id="confirmYes" class="glow-button flex-1 py-3 text-white rounded-lg font-medium">
+                    ยืนยัน
+                </button>
+                <button onclick="hideConfirmModal()" class="flex-1 py-3 text-gray-400 border border-gray-600 rounded-lg hover:border-gray-500">
+                    ยกเลิก
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let users = [
+            { id: 1, username: 'admin', password: 'admin123', firstName: 'ผู้ดูแล', lastName: 'ระบบ', jobType: 'แอดมิน', role: 'admin', status: 'approved' }
+        ];
+        let portfolios = [];
+        let jobs = [];
+        let images = [];
+        let categories = [
+            { id: 1, name: 'ครูประถม', createdAt: '2024-01-01' },
+            { id: 2, name: 'ครูมัธยม', createdAt: '2024-01-01' },
+            { id: 3, name: 'ครูอนุบาล', createdAt: '2024-01-01' },
+            { id: 4, name: 'ครูพิเศษ', createdAt: '2024-01-01' }
+        ];
+        let sidebarCollapsed = false;
+
+        // Permission system
+        let permissions = {
+            admin: {
+                'dashboardSection': { enabled: true, name: 'Dashboard', icon: 'fas fa-tachometer-alt' },
+                'portfolioSection': { enabled: true, name: 'คลังผลงาน', icon: 'fas fa-folder' },
+                'userManagementSection': { enabled: true, name: 'จัดการผู้ใช้', icon: 'fas fa-users' },
+                'categorySection': { enabled: true, name: 'หมวดหมู่', icon: 'fas fa-tags' },
+                'permissionSection': { enabled: true, name: 'สิทธิ์การใช้งาน', icon: 'fas fa-shield-alt' },
+                'settingsSection': { enabled: true, name: 'ตั้งค่าเว็บไซต์', icon: 'fas fa-cog' },
+                'gallerySection': { enabled: true, name: 'เก็บรูปภาพ', icon: 'fas fa-images' },
+                'systemSection': { enabled: true, name: 'ระบบเว็บไซต์', icon: 'fas fa-power-off' },
+                'jobSection': { enabled: true, name: 'รายจ้างงาน', icon: 'fas fa-briefcase' }
+            },
+            user: {
+                'userDashboardSection': { enabled: true, name: 'Dashboard', icon: 'fas fa-tachometer-alt' },
+                'userPortfolioSection': { enabled: true, name: 'ผลงานของฉัน', icon: 'fas fa-folder' },
+                'userJobSection': { enabled: true, name: 'รายจ้างงาน', icon: 'fas fa-briefcase' }
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDashboardStats();
+        });
+
+        // Authentication functions
+        function showLogin() {
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+
+        function hideLogin() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('registerModal').classList.remove('hidden');
+        }
+
+        function hideRegister() {
+            document.getElementById('registerModal').classList.add('hidden');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                if (user.status !== 'approved') {
+                    alert('บัญชีของคุณยังไม่ได้รับการอนุมัติ กรุณารอการอนุมัติจากแอดมิน');
+                    return;
+                }
+                
+                currentUser = user;
+                hideLogin();
+                showDashboard();
+            } else {
+                alert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const jobType = document.getElementById('jobType').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Check if username already exists
+            if (users.find(u => u.username === username)) {
+                alert('ชื่อผู้ใช้นี้มีอยู่แล้ว');
+                return;
+            }
+
+            const newUser = {
+                id: users.length + 1,
+                username,
+                password,
+                firstName,
+                lastName,
+                jobType,
+                role: 'user',
+                status: 'pending'
+            };
+
+            users.push(newUser);
+            hideRegister();
+            alert('สมัครสมาชิกสำเร็จ! กรุณารอการอนุมัติจากแอดมิน');
+            updateUserTable();
+            updateDashboardStats();
+        }
+
+        function showDashboard() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            
+            if (currentUser.role === 'admin') {
+                document.getElementById('adminMenu').classList.remove('hidden');
+                document.getElementById('userMenu').classList.add('hidden');
+                document.getElementById('sidebarTitle').textContent = 'TPS Admin';
+                document.getElementById('userWelcome').textContent = `ยินดีต้อนรับ, ${currentUser.firstName}`;
+                showSection('dashboardSection');
+            } else {
+                document.getElementById('adminMenu').classList.add('hidden');
+                document.getElementById('userMenu').classList.remove('hidden');
+                document.getElementById('sidebarTitle').textContent = 'TPS User';
+                document.getElementById('userWelcome').textContent = `ยินดีต้อนรับ, ${currentUser.firstName}`;
+                showSection('userDashboardSection');
+            }
+            
+            // Apply permission-based visibility
+            updateSidebarVisibility();
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('landingPage').classList.remove('hidden');
+        }
+
+        // Sidebar functions
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+            
+            sidebarCollapsed = !sidebarCollapsed;
+            
+            if (sidebarCollapsed) {
+                sidebar.classList.remove('sidebar-expanded');
+                sidebar.classList.add('sidebar-collapsed');
+                mainContent.classList.remove('ml-80');
+                mainContent.classList.add('ml-20');
+                sidebarTexts.forEach(text => text.style.display = 'none');
+            } else {
+                sidebar.classList.remove('sidebar-collapsed');
+                sidebar.classList.add('sidebar-expanded');
+                mainContent.classList.remove('ml-20');
+                mainContent.classList.add('ml-80');
+                sidebarTexts.forEach(text => text.style.display = 'inline');
+            }
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Remove active class from all menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Add active class to clicked menu item
+            event.target.closest('.menu-item').classList.add('active');
+            
+            // Update page title
+            const titles = {
+                'dashboardSection': 'Dashboard',
+                'portfolioSection': 'คลังผลงาน',
+                'userManagementSection': 'จัดการผู้ใช้',
+                'categorySection': 'หมวดหมู่',
+                'permissionSection': 'สิทธิ์การใช้งาน',
+                'settingsSection': 'ตั้งค่าเว็บไซต์',
+                'gallerySection': 'เก็บรูปภาพ',
+                'systemSection': 'ระบบเว็บไซต์',
+                'jobSection': 'รายจ้างงาน',
+                'userDashboardSection': 'Dashboard',
+                'userPortfolioSection': 'ผลงานของฉัน',
+                'userJobSection': 'รายจ้างงาน'
+            };
+            
+            document.getElementById('pageTitle').textContent = titles[sectionId] || 'Dashboard';
+            
+            // Load section data
+            if (sectionId === 'userManagementSection') {
+                updateUserTable();
+            } else if (sectionId === 'portfolioSection' || sectionId === 'userPortfolioSection') {
+                updatePortfolioTable();
+            } else if (sectionId === 'jobSection' || sectionId === 'userJobSection') {
+                updateJobTable();
+            } else if (sectionId === 'gallerySection') {
+                updateImageGallery();
+            } else if (sectionId === 'categorySection') {
+                updateCategoryTable();
+            } else if (sectionId === 'permissionSection') {
+                updatePermissionSettings();
+            }
+        }
+
+        // Portfolio functions
+        function showAddPortfolioModal() {
+            document.getElementById('addPortfolioModal').classList.remove('hidden');
+        }
+
+        function hideAddPortfolioModal() {
+            document.getElementById('addPortfolioModal').classList.add('hidden');
+            document.getElementById('portfolioName').value = '';
+            document.getElementById('portfolioDescription').value = '';
+            document.getElementById('portfolioFile').value = '';
+        }
+
+        function handleAddPortfolio(event) {
+            event.preventDefault();
+            const name = document.getElementById('portfolioName').value;
+            const description = document.getElementById('portfolioDescription').value;
+            const files = document.getElementById('portfolioFile').files;
+            
+            const newPortfolio = {
+                id: portfolios.length + 1,
+                name,
+                description,
+                files: Array.from(files).map(file => file.name),
+                createdAt: new Date().toLocaleDateString('th-TH'),
+                userId: currentUser.id
+            };
+            
+            portfolios.push(newPortfolio);
+            hideAddPortfolioModal();
+            updatePortfolioTable();
+            updateDashboardStats();
+            alert('เพิ่มผลงานสำเร็จ!');
+        }
+
+        function updatePortfolioTable() {
+            const tableBody = document.getElementById('portfolioTableBody') || document.getElementById('userPortfolioTableBody');
+            if (!tableBody) return;
+            
+            let displayPortfolios = portfolios;
+            if (currentUser.role === 'user') {
+                displayPortfolios = portfolios.filter(p => p.userId === currentUser.id);
+            }
+            
+            tableBody.innerHTML = displayPortfolios.map(portfolio => `
+                <tr class="border-b border-gray-700">
+                    <td class="px-6 py-4 text-white">${portfolio.name}</td>
+                    <td class="px-6 py-4 text-gray-300">${portfolio.description}</td>
+                    <td class="px-6 py-4 text-gray-300">${portfolio.files.join(', ') || 'ไม่มีไฟล์'}</td>
+                    <td class="px-6 py-4 text-gray-300">${portfolio.createdAt}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="editPortfolio(${portfolio.id})" class="text-blue-400 hover:text-blue-300 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deletePortfolio(${portfolio.id})" class="text-red-400 hover:text-red-300">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deletePortfolio(id) {
+            showConfirmModal('คุณแน่ใจหรือไม่ที่จะลบผลงานนี้?', () => {
+                portfolios = portfolios.filter(p => p.id !== id);
+                updatePortfolioTable();
+                updateDashboardStats();
+                alert('ลบผลงานสำเร็จ!');
+            });
+        }
+
+        // Job functions
+        function showAddJobModal() {
+            document.getElementById('addJobModal').classList.remove('hidden');
+        }
+
+        function hideAddJobModal() {
+            document.getElementById('addJobModal').classList.add('hidden');
+            document.getElementById('jobFirstName').value = '';
+            document.getElementById('jobLastName').value = '';
+            document.getElementById('jobDescription').value = '';
+            document.getElementById('jobFiles').value = '';
+        }
+
+        function handleAddJob(event) {
+            event.preventDefault();
+            const firstName = document.getElementById('jobFirstName').value;
+            const lastName = document.getElementById('jobLastName').value;
+            const description = document.getElementById('jobDescription').value;
+            const files = document.getElementById('jobFiles').files;
+            
+            const newJob = {
+                id: jobs.length + 1,
+                firstName,
+                lastName,
+                description,
+                files: Array.from(files).map(file => file.name),
+                createdAt: new Date().toLocaleDateString('th-TH'),
+                userId: currentUser.id
+            };
+            
+            jobs.push(newJob);
+            hideAddJobModal();
+            updateJobTable();
+            updateDashboardStats();
+            alert('เพิ่มรายจ้างงานสำเร็จ!');
+        }
+
+        function updateJobTable() {
+            const tableBody = document.getElementById('jobTableBody') || document.getElementById('userJobTableBody');
+            if (!tableBody) return;
+            
+            let displayJobs = jobs;
+            if (currentUser.role === 'user') {
+                displayJobs = jobs.filter(j => j.userId === currentUser.id);
+            }
+            
+            tableBody.innerHTML = displayJobs.map(job => `
+                <tr class="border-b border-gray-700">
+                    <td class="px-6 py-4 text-white">${job.firstName} ${job.lastName}</td>
+                    <td class="px-6 py-4 text-gray-300">${job.description}</td>
+                    <td class="px-6 py-4 text-gray-300">${job.files.join(', ') || 'ไม่มีไฟล์'}</td>
+                    <td class="px-6 py-4 text-gray-300">${job.createdAt}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="editJob(${job.id})" class="text-blue-400 hover:text-blue-300 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteJob(${job.id})" class="text-red-400 hover:text-red-300">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteJob(id) {
+            showConfirmModal('คุณแน่ใจหรือไม่ที่จะลบรายจ้างงานนี้?', () => {
+                jobs = jobs.filter(j => j.id !== id);
+                updateJobTable();
+                updateDashboardStats();
+                alert('ลบรายจ้างงานสำเร็จ!');
+            });
+        }
+
+        // User management functions
+        function updateUserTable() {
+            const tableBody = document.getElementById('userTableBody');
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = users.map(user => `
+                <tr class="border-b border-gray-700">
+                    <td class="px-6 py-4 text-white">${user.firstName} ${user.lastName}</td>
+                    <td class="px-6 py-4 text-gray-300">${user.jobType}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded text-sm ${user.role === 'admin' ? 'bg-purple-600' : 'bg-blue-600'} text-white">
+                            ${user.role === 'admin' ? 'แอดมิน' : 'ผู้ใช้ธรรมดา'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded text-sm ${
+                            user.status === 'approved' ? 'bg-green-600 text-white' : 
+                            user.status === 'pending' ? 'bg-yellow-600 text-white' : 
+                            'bg-red-600 text-white'
+                        }">
+                            ${user.status === 'approved' ? 'อนุมัติแล้ว' : 
+                              user.status === 'pending' ? 'รอการอนุมัติ' : 'ปฏิเสธ'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        ${user.status === 'pending' ? `
+                            <button onclick="approveUser(${user.id})" class="text-green-400 hover:text-green-300 mr-2">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button onclick="rejectUser(${user.id})" class="text-red-400 hover:text-red-300 mr-2">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        ` : ''}
+                        <button onclick="editUser(${user.id})" class="text-blue-400 hover:text-blue-300 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        ${user.id !== 1 ? `
+                            <button onclick="deleteUser(${user.id})" class="text-red-400 hover:text-red-300">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function approveUser(id) {
+            const user = users.find(u => u.id === id);
+            if (user) {
+                user.status = 'approved';
+                updateUserTable();
+                updateDashboardStats();
+                alert(`อนุมัติผู้ใช้ ${user.firstName} ${user.lastName} สำเร็จ!`);
+            }
+        }
+
+        function rejectUser(id) {
+            showConfirmModal('คุณแน่ใจหรือไม่ที่จะปฏิเสธผู้ใช้นี้?', () => {
+                const user = users.find(u => u.id === id);
+                if (user) {
+                    user.status = 'rejected';
+                    updateUserTable();
+                    updateDashboardStats();
+                    alert(`ปฏิเสธผู้ใช้ ${user.firstName} ${user.lastName} สำเร็จ!`);
+                }
+            });
+        }
+
+        function deleteUser(id) {
+            showConfirmModal('คุณแน่ใจหรือไม่ที่จะลบผู้ใช้นี้?', () => {
+                users = users.filter(u => u.id !== id);
+                updateUserTable();
+                updateDashboardStats();
+                alert('ลบผู้ใช้สำเร็จ!');
+            });
+        }
+
+        // System functions
+        function toggleSystem(element) {
+            element.classList.toggle('active');
+            const isActive = element.classList.contains('active');
+            alert(isActive ? 'เปิดระบบเว็บไซต์แล้ว' : 'ปิดระบบเว็บไซต์แล้ว');
+        }
+
+        // Modal functions
+        function showConfirmModal(message, onConfirm) {
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmModal').classList.remove('hidden');
+            
+            document.getElementById('confirmYes').onclick = () => {
+                onConfirm();
+                hideConfirmModal();
+            };
+        }
+
+        function hideConfirmModal() {
+            document.getElementById('confirmModal').classList.add('hidden');
+        }
+
+        // Dashboard stats
+        function updateDashboardStats() {
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('totalPortfolios').textContent = portfolios.length;
+            document.getElementById('pendingApprovals').textContent = users.filter(u => u.status === 'pending').length;
+            document.getElementById('totalJobs').textContent = jobs.length;
+        }
+
+        // Placeholder functions for edit operations
+        function editPortfolio(id) {
+            alert('ฟังก์ชันแก้ไขผลงาน (Portfolio ID: ' + id + ')');
+        }
+
+        function editJob(id) {
+            alert('ฟังก์ชันแก้ไขรายจ้างงาน (Job ID: ' + id + ')');
+        }
+
+        function editUser(id) {
+            alert('ฟังก์ชันแก้ไขผู้ใช้ (User ID: ' + id + ')');
+        }
+
+        // User management functions
+        function showAddUserModal() {
+            document.getElementById('addUserModal').classList.remove('hidden');
+        }
+
+        function hideAddUserModal() {
+            document.getElementById('addUserModal').classList.add('hidden');
+            // Clear form
+            document.getElementById('newUserFirstName').value = '';
+            document.getElementById('newUserLastName').value = '';
+            document.getElementById('newUserJobType').value = '';
+            document.getElementById('newUserRole').value = 'user';
+            document.getElementById('newUserUsername').value = '';
+            document.getElementById('newUserPassword').value = '';
+            document.getElementById('newUserStatus').value = 'approved';
+        }
+
+        function handleAddUser(event) {
+            event.preventDefault();
+            const firstName = document.getElementById('newUserFirstName').value;
+            const lastName = document.getElementById('newUserLastName').value;
+            const jobType = document.getElementById('newUserJobType').value;
+            const role = document.getElementById('newUserRole').value;
+            const username = document.getElementById('newUserUsername').value;
+            const password = document.getElementById('newUserPassword').value;
+            const status = document.getElementById('newUserStatus').value;
+
+            // Check if username already exists
+            if (users.find(u => u.username === username)) {
+                alert('ชื่อผู้ใช้นี้มีอยู่แล้ว');
+                return;
+            }
+
+            const newUser = {
+                id: users.length + 1,
+                username,
+                password,
+                firstName,
+                lastName,
+                jobType,
+                role,
+                status
+            };
+
+            users.push(newUser);
+            hideAddUserModal();
+            updateUserTable();
+            updateDashboardStats();
+            alert('เพิ่มผู้ใช้สำเร็จ!');
+        }
+
+        // Image gallery functions
+        function showAddImageModal() {
+            document.getElementById('addImageModal').classList.remove('hidden');
+        }
+
+        function hideAddImageModal() {
+            document.getElementById('addImageModal').classList.add('hidden');
+            document.getElementById('imageName').value = '';
+            document.getElementById('imageFile').value = '';
+        }
+
+        function handleAddImage(event) {
+            event.preventDefault();
+            const name = document.getElementById('imageName').value;
+            const file = document.getElementById('imageFile').files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newImage = {
+                        id: images.length + 1,
+                        name,
+                        src: e.target.result,
+                        createdAt: new Date().toLocaleDateString('th-TH')
+                    };
+                    
+                    images.push(newImage);
+                    hideAddImageModal();
+                    updateImageGallery();
+                    alert('เพิ่มรูปภาพสำเร็จ!');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateImageGallery() {
+            const imageGrid = document.getElementById('imageGrid');
+            if (!imageGrid) return;
+            
+            imageGrid.innerHTML = images.map(image => `
+                <div class="glass-card rounded-xl overflow-hidden">
+                    <div class="aspect-square bg-gray-800 flex items-center justify-center">
+                        <img src="${image.src}" alt="${image.name}" class="w-full h-full object-cover cursor-pointer" onclick="viewImage('${image.name}', '${image.src}')">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-white font-medium mb-2">${image.name}</h3>
+                        <p class="text-gray-400 text-sm mb-3">วันที่: ${image.createdAt}</p>
+                        <div class="flex space-x-2">
+                            <button onclick="viewImage('${image.name}', '${image.src}')" class="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                                <i class="fas fa-eye mr-1"></i>ดู
+                            </button>
+                            <button onclick="editImage(${image.id})" class="flex-1 px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm">
+                                <i class="fas fa-edit mr-1"></i>แก้ไข
+                            </button>
+                            <button onclick="deleteImage(${image.id})" class="flex-1 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm">
+                                <i class="fas fa-trash mr-1"></i>ลบ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewImage(name, src) {
+            document.getElementById('imageViewTitle').textContent = name;
+            document.getElementById('imageViewContent').src = src;
+            document.getElementById('imageViewContent').alt = name;
+            document.getElementById('imageViewModal').classList.remove('hidden');
+        }
+
+        function hideImageViewModal() {
+            document.getElementById('imageViewModal').classList.add('hidden');
+        }
+
+        function deleteImage(id) {
+            showConfirmModal('คุณแน่ใจหรือไม่ที่จะลบรูปภาพนี้?', () => {
+                images = images.filter(img => img.id !== id);
+                updateImageGallery();
+                alert('ลบรูปภาพสำเร็จ!');
+            });
+        }
+
+        function editImage(id) {
+            alert('ฟังก์ชันแก้ไขรูปภาพ (Image ID: ' + id + ')');
+        }
+
+        // Category management functions
+        function showAddCategoryModal() {
+            document.getElementById('addCategoryModal').classList.remove('hidden');
+        }
+
+        function hideAddCategoryModal() {
+            document.getElementById('addCategoryModal').classList.add('hidden');
+            document.getElementById('categoryName').value = '';
+        }
+
+        function handleAddCategory(event) {
+            event.preventDefault();
+            const name = document.getElementById('categoryName').value;
+            
+            // Check if category already exists
+            if (categories.find(c => c.name === name)) {
+                alert('ประเภทงานนี้มีอยู่แล้ว');
+                return;
+            }
+
+            const newCategory = {
+                id: categories.length + 1,
+                name,
+                createdAt: new Date().toLocaleDateString('th-TH')
+            };
+            
+            categories.push(newCategory);
+            hideAddCategoryModal();
+            updateCategoryTable();
+            updateJobTypeOptions();
+            alert('เพิ่มประเภทงานสำเร็จ!');
+        }
+
+        function updateCategoryTable() {
+            const tableBody = document.getElementById('categoryTableBody');
+            if (!tableBody) return;
+            
+            tableBody.innerHTML = categories.map((category, index) => `
+                <tr class="border-b border-gray-700">
+                    <td class="px-6 py-4 text-white">${index + 1}</td>
+                    <td class="px-6 py-4 text-white">${category.name}</td>
+                    <td class="px-6 py-4 text-gray-300">${category.createdAt}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="editCategory(${category.id})" class="text-blue-400 hover:text-blue-300 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteCategory(${category.id})" class="text-red-400 hover:text-red-300">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteCategory(id) {
+            showConfirmModal('คุณแน่ใจหรือไม่ที่จะลบประเภทงานนี้?', () => {
+                categories = categories.filter(c => c.id !== id);
+                updateCategoryTable();
+                updateJobTypeOptions();
+                alert('ลบประเภทงานสำเร็จ!');
+            });
+        }
+
+        function editCategory(id) {
+            alert('ฟังก์ชันแก้ไขประเภทงาน (Category ID: ' + id + ')');
+        }
+
+        function updateJobTypeOptions() {
+            const selects = ['jobType', 'newUserJobType'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    const currentValue = select.value;
+                    select.innerHTML = '<option value="">เลือกประเภทงาน</option>' +
+                        categories.map(cat => `<option value="${cat.name}">${cat.name}</option>`).join('');
+                    select.value = currentValue;
+                }
+            });
+        }
+
+        // Website settings functions
+        function handleWebsiteSettings(event) {
+            event.preventDefault();
+            const websiteName = document.getElementById('websiteName').value;
+            const logoFile = document.getElementById('websiteLogo').files[0];
+            
+            // Update website name in header
+            document.querySelector('.gradient-text').textContent = websiteName;
+            
+            if (logoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Update logo if needed
+                    alert('อัพเดตโลโก้สำเร็จ!');
+                };
+                reader.readAsDataURL(logoFile);
+            }
+            
+            alert('บันทึกการตั้งค่าเว็บไซต์สำเร็จ!');
+        }
+
+        // Permission management functions
+        function updatePermissionSettings() {
+            const adminPermissionsDiv = document.getElementById('adminPermissions');
+            const userPermissionsDiv = document.getElementById('userPermissions');
+            
+            if (adminPermissionsDiv) {
+                adminPermissionsDiv.innerHTML = Object.keys(permissions.admin).map(key => {
+                    const perm = permissions.admin[key];
+                    return `
+                        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <i class="${perm.icon} text-purple-500"></i>
+                                <span class="text-white font-medium">${perm.name}</span>
+                            </div>
+                            <div class="toggle-switch ${perm.enabled ? 'active' : ''}" onclick="togglePermission('admin', '${key}', this)">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            if (userPermissionsDiv) {
+                userPermissionsDiv.innerHTML = Object.keys(permissions.user).map(key => {
+                    const perm = permissions.user[key];
+                    return `
+                        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <i class="${perm.icon} text-blue-500"></i>
+                                <span class="text-white font-medium">${perm.name}</span>
+                            </div>
+                            <div class="toggle-switch ${perm.enabled ? 'active' : ''}" onclick="togglePermission('user', '${key}', this)">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function togglePermission(role, permissionKey, element) {
+            element.classList.toggle('active');
+            const isEnabled = element.classList.contains('active');
+            permissions[role][permissionKey].enabled = isEnabled;
+            
+            // Update sidebar visibility in real-time if current user matches the role
+            if (currentUser && currentUser.role === role) {
+                updateSidebarVisibility();
+            }
+        }
+
+        function updateSidebarVisibility() {
+            const userRole = currentUser.role;
+            const userPermissions = permissions[userRole];
+            
+            // Hide/show menu items based on permissions
+            Object.keys(userPermissions).forEach(permissionKey => {
+                const menuItems = document.querySelectorAll(`[onclick*="${permissionKey}"]`);
+                menuItems.forEach(item => {
+                    if (userPermissions[permissionKey].enabled) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        function savePermissions() {
+            // In a real application, this would save to a database
+            alert('บันทึกสิทธิ์การใช้งานสำเร็จ! การเปลี่ยนแปลงจะมีผลทันที');
+            
+            // Update current user's sidebar if they're affected
+            if (currentUser) {
+                updateSidebarVisibility();
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ac3333f43f731f',t:'MTc1OTgyNzU0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
